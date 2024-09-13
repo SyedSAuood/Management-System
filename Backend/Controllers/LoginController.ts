@@ -5,13 +5,13 @@ const jwt = require('jsonwebtoken');
 
 export const registerUser = async (req:Request , res: Response) =>{
     
-    console.log(req.body.formData);
-    const {username , email , password , confirmPassword} = req.body.formData;
+    console.log(req.body);
+    const {username , email , password , confirmPassword} = req.body;
     try {
         const CheckUser = await User.findOne({UserName: username});
 
         if(CheckUser){
-           return res.status(400).json({ success: false, error: "User Already Exist"});
+           return res.status(400).json({ success: false, message: "User Already Exist"});
 
         }
 
@@ -31,8 +31,8 @@ export const registerUser = async (req:Request , res: Response) =>{
 
         
         return  res.status(200).json({ success: true, message: "User created successfully" });
-    } catch (error ) {
-        return  res.status(500).json({ success: false});
+    } catch (error) {
+        return  res.status(500).json({ success: false ,  message: "Error Occured TRY AGAIN"});
     }
 
 }

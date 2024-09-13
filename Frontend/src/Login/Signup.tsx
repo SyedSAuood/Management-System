@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosResponse } from "axios";
 import React, { useState } from "react"
 
 // interface and type are both same 
@@ -54,20 +54,27 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         return Object.keys(newErrors).length === 0;
     };
 
+    interface ApiResponse {
+      message: string;
+      errors?: Record<string, string>;
+    }
+
   const handleSubmit = async (e : React.FormEvent<HTMLFormElement>) : Promise<void> =>{
         e.preventDefault();
         try {
             if(validate()){
-                console.log('Form data submitted:', formData);
-                const response = await axios.post('/api/signin',{
-                    formData : formData
-                })
-                console.log(response.data)
+                const response : AxiosResponse<ApiResponse> = await axios.post('/api/signin',
+                     formData
+                );
+                console.log(response.data);
+
                 setSuccessMessage('Signup successful!');
                 setErrors({});
              }
-        } catch (error) {
-            setSuccessMessage('');
+        } catch (error :any ) {
+            //setSuccessMessage('');
+            setSuccessMessage(error.response.data.message);
+
         }
 
   }
@@ -77,12 +84,12 @@ const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   /*
   the name attribute is Refference
   */
-console.log(formData)
+
 
   return (
    <form  onSubmit={handleSubmit} >
     {successMessage && <p>{successMessage}</p>}
-
+   
     <label>Name</label>
     <input type="text"  name="username"  value={formData.username} onChange={handleChange}/> 
     {errors.username && <p className="error">{errors.username}</p>}
