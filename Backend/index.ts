@@ -15,9 +15,7 @@ app.use('/signin', LoginRoutes);
 
 
 
-app.get('/', (req, res) => {
-  res.send('Hello TypeScript with Node.js!');
-});
+
 
 app.listen(port, () => {
   ConnectToDB();

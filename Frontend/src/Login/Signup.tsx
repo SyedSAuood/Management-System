@@ -11,7 +11,7 @@ interface FormData {
 
 type ErrorFormData = Partial<FormData>
 
-const Signup : React.FC = () => {
+const Signup = () => {
    
 const[ formData , setFormData] = useState<FormData>({
     username: '',  
