@@ -62,7 +62,7 @@ export const loginUser = async (req:Request , res:Response) =>{
                 sameSite: 'strict'
             });
 
-           return res.status(200).json({ success : true , message : `User Logged IN `});
+           return res.status(200).json({ success : true , message : username});
         }else{
             return res.status(400).json({ success: false , message: "Password donot Match"});
         }

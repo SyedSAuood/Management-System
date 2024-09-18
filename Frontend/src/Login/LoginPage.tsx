@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {  useStateContext } from "../CustomHook/ContextProvider";
 
 interface user{
     username: string;
@@ -11,7 +13,7 @@ type ErrorFormData = Partial<user>
 
 const LoginPage = () => {
 
-
+ 
     const[formData , setFormData] = useState<user>({
         username : '',
         email: '',
@@ -20,6 +22,8 @@ const LoginPage = () => {
 
     const[error , setErrors] =useState<ErrorFormData>({})
     const [successMessage , setSuccessMessage] = useState<string>('');
+
+    const { setUser , user } = useStateContext();
 
     const validate = (): boolean => {
       const newErrors: ErrorFormData = {};
@@ -59,7 +63,8 @@ const LoginPage = () => {
           const Response  = await axios.post('/api/signin/login',
             formData
           );
-          console.log(Response.data)
+          //console.log(Response.data.message)
+          setUser(Response.data.message)
           setSuccessMessage("Login successfull!")
           setErrors({});
         }
@@ -68,7 +73,13 @@ const LoginPage = () => {
       }
     }
 
+console.log(user)
 
+    const navigate = useNavigate();
+    
+    const gotoSignIn = () =>{
+      navigate('/signin')
+    }
 
 
   return (
@@ -87,6 +98,7 @@ const LoginPage = () => {
         {error.password && <p className="error">{error.password}</p>}
 
         <button type="submit">Login</button>
+        <button type="button" onClick={gotoSignIn}>SignUp</button>
     </form>
   )
 }
