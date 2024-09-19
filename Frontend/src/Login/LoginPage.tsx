@@ -23,7 +23,7 @@ const LoginPage = () => {
     const[error , setErrors] =useState<ErrorFormData>({})
     const [successMessage , setSuccessMessage] = useState<string>('');
 
-    const { setUser , user } = useStateContext();
+    const { setUser, setUserRole } = useStateContext();
 
     const validate = (): boolean => {
       const newErrors: ErrorFormData = {};
@@ -64,16 +64,17 @@ const LoginPage = () => {
             formData
           );
           //console.log(Response.data.message)
-          setUser(Response.data.message)
+          setUser(Response.data.username);
+          setUserRole(Response.data.userRole);
           setSuccessMessage("Login successfull!")
           setErrors({});
+          navigate('/Home')
         }
       } catch (error : any) {
         setSuccessMessage(error.response.data.message)
       }
     }
 
-console.log(user)
 
     const navigate = useNavigate();
     
@@ -81,6 +82,9 @@ console.log(user)
       navigate('/signin')
     }
 
+    const gotoHome = () =>{
+      navigate('/Home')
+    }
 
   return (
     <form onSubmit={HandleSubmit}>
@@ -97,7 +101,7 @@ console.log(user)
         <input type="password" name="password" value={formData.password} onChange={Handlechange} />
         {error.password && <p className="error">{error.password}</p>}
 
-        <button type="submit">Login</button>
+        <button type="submit" >Login</button>
         <button type="button" onClick={gotoSignIn}>SignUp</button>
     </form>
   )

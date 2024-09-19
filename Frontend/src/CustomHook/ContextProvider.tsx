@@ -1,8 +1,10 @@
-import { createContext , ReactNode, useContext , useState } from "react";
+import React, { createContext , ReactNode, useContext , useState } from "react";
 
 interface StateContextType {
     user: string | null;
     setUser: React.Dispatch<React.SetStateAction<string | null>>;
+    userRole: string;
+    setUserRole : React.Dispatch<React.SetStateAction<string>>;
   }
 
 
@@ -15,13 +17,16 @@ interface ContextProviderProps {
 export const ContextProvider : React.FC<ContextProviderProps> = ({children} : any) =>{
     
     const[user,setUser] = useState<string | null>(null)
+    const[userRole, setUserRole] = useState<string>('guest')
 
 
     return(
         <StateContext.Provider
             value ={{
                 user,
-                setUser
+                setUser,
+                userRole,
+                setUserRole
             }}>
             {children}
 

@@ -23,11 +23,12 @@ export const registerUser = async (req:Request , res: Response) =>{
         const user = new User({
             UserName : username,
             Email : email,
+            Role: "User",
             Password : hashedPasword,
             ConfirmPassword : hashedConfirmPasword,
         })
 
-        const saveuser = await user.save();
+         await user.save();
 
         
         return  res.status(200).json({ success: true, message: "User created successfully" });
@@ -40,18 +41,18 @@ export const registerUser = async (req:Request , res: Response) =>{
 export const loginUser = async (req:Request , res:Response) =>{
   
     try {
-        const {username , email, password} = req.body;
+        const {username , email, password, role} = req.body;
 
         const checkUser = await User.findOne({UserName:username,Email : email});
 
         if(!checkUser){
             return res.status(400).json({ success: false , message: "User Not found"});
         }
-
+        
         const match = await bcrypt.compare(password , checkUser.Password);
 
         if(match){
-            const user  = {username : username};
+            const user  = {username : username , role : checkUser.Role};
             const secretkey : string = 'secretkey';
             const token = jwt.sign(user , secretkey , {expiresIn : '1h'});
 
@@ -59,10 +60,11 @@ export const loginUser = async (req:Request , res:Response) =>{
                 httpOnly: true,
                 secure: true,
                 maxAge: 3600000,
-                sameSite: 'strict'
+                sameSite: 'strict',
+                
             });
 
-           return res.status(200).json({ success : true , message : username});
+           return res.status(200).json({ success : true , username : username, userRole : checkUser.Role});
         }else{
             return res.status(400).json({ success: false , message: "Password donot Match"});
         }
